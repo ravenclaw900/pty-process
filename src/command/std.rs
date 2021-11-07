@@ -15,9 +15,11 @@ impl super::CommandImpl for std::process::Command {
         // have returned an Err and we would have exited early) and are not
         // owned by any other structure (since dup() returns a fresh copy of
         // the file descriptor), allowing from_raw_fd to take ownership of it.
+        println!("started std_fds");
         self.stdin(unsafe { std::process::Stdio::from_raw_fd(stdin) })
             .stdout(unsafe { std::process::Stdio::from_raw_fd(stdout) })
             .stderr(unsafe { std::process::Stdio::from_raw_fd(stderr) });
+        println!("sucessfully finished std_fds");
     }
 
     unsafe fn pre_exec_impl<F>(&mut self, f: F)
