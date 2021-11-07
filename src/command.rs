@@ -51,6 +51,8 @@ where
         println!("Got fds");
 
         self.std_fds(stdin, stdout, stderr);
+        
+        println!("Did std_fds");
 
         let pre_exec = move || {
             println!("Started pre-exec");
