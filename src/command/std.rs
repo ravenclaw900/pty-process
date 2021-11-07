@@ -32,6 +32,7 @@ impl super::CommandImpl for std::process::Command {
     fn spawn_impl(&mut self) -> ::std::io::Result<Self::Child> {
         println!("running spawn");
         let spawned = self.spawn();
+        dbg!(&spawned);
         println!("ran spawn");
         spawned
     }
