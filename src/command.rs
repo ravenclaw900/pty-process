@@ -83,10 +83,14 @@ where
         // safe because setsid() and close() are async-signal-safe functions
         // and ioctl() is a raw syscall (which is inherently
         // async-signal-safe).
+        println!("done with pre-exec");
         unsafe { self.pre_exec_impl(pre_exec) };
-
+        println!("did pre-exec-impl");
+        
         let child = self.spawn_impl().map_err(Error::Spawn)?;
 
+        println!("did spawn-impl");
+        
         Ok(Child { child, pty })
     }
 }
