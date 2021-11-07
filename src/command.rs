@@ -42,13 +42,18 @@ where
         size: Option<&crate::pty::Size>,
     ) -> Result<Child<Self::Child, Self::Pty>> {
         let (pty, pts, stdin, stdout, stderr) = setup_pty::<Self::Pty>(size)?;
+        
+        println!("Setup pty");
 
         let pt_fd = pty.pt().as_raw_fd();
         let pts_fd = pts.as_raw_fd();
+        
+        println!("Got fds");
 
         self.std_fds(stdin, stdout, stderr);
 
         let pre_exec = move || {
+            println!("Started pre-exec");
             nix::unistd::setsid().map_err(|e| e.as_errno().unwrap())?;
             set_controlling_terminal(pts_fd)
                 .map_err(|e| e.as_errno().unwrap())?;
@@ -59,6 +64,7 @@ where
             // the child, we end by calling exec(), which doesn't call
             // destructors.
 
+            println!("Closing old fds");
             // XXX unwrap
             nix::unistd::close(pt_fd).map_err(|e| e.as_errno().unwrap())?;
             nix::unistd::close(pts_fd).map_err(|e| e.as_errno().unwrap())?;
@@ -68,6 +74,7 @@ where
             nix::unistd::close(stdin).map_err(|e| e.as_errno().unwrap())?;
             nix::unistd::close(stdout).map_err(|e| e.as_errno().unwrap())?;
             nix::unistd::close(stderr).map_err(|e| e.as_errno().unwrap())?;
+            println!("Closed old fds");
 
             Ok(())
         };
