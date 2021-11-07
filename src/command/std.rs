@@ -32,6 +32,5 @@ impl super::CommandImpl for std::process::Command {
     fn spawn_impl(&mut self) -> ::std::io::Result<Self::Child> {
         println!("running spawn");
         self.spawn()
-        println!("ran spawn");
     }
 }
